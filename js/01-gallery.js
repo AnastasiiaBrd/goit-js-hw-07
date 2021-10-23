@@ -35,8 +35,15 @@ const instance = basicLightbox.create(
   {
     onShow: (instance) => {
       instance.element().querySelector("img").onclick = instance.close;
+      document.addEventListener("keydown", closeModal);
     },
   }
 );
+
+function closeModal(event) {
+  if (event.key === "Escape") {
+    instance.close(document.removeEventListener("keydown", closeModal));
+  }
+}
 
 console.log(galleryItems);
