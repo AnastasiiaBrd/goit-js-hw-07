@@ -21,28 +21,31 @@ gallery.insertAdjacentHTML("beforeend", markup);
 gallery.addEventListener("click", getImageUrl);
 
 function getImageUrl(event) {
+  if (event.target.nodeName !== "IMG") {
+    return;
+  }
   event.preventDefault();
   const imageUrl = event.target.dataset.source;
   let srcImage = instance.element().querySelector("img");
   srcImage.setAttribute("src", imageUrl);
   instance.show();
 }
-
 const instance = basicLightbox.create(
   `
     <img src="assets/images/image.png" width="800" height="600">
-`,
+  `,
   {
     onShow: (instance) => {
-      instance.element().querySelector("img").onclick = instance.close;
-      document.addEventListener("keydown", closeModal);
+      window.addEventListener("keydown", closeModal);
+    },
+    onClose: (instance) => {
+      window.removeEventListener("keydown", closeModal);
     },
   }
 );
-
 function closeModal(event) {
   if (event.key === "Escape") {
-    instance.close(document.removeEventListener("keydown", closeModal));
+    instance.close();
   }
 }
 
